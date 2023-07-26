@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
 const clientId = "3c00a89d0d484cbfb9bf9aba6f5d351a";
 const params = new URLSearchParams(window.location.search);
@@ -92,6 +94,16 @@ async function getPlaylistDetails(access_token, playlist_id) {
 const Home = () => {
   const [profileDetails, setProfileDetails] = useState("");
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      searchInput: "",
+    },
+  });
+
   const router = useRouter();
 
   useEffect(() => {
@@ -125,7 +137,20 @@ const Home = () => {
       </div>
       <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
         <Typography variant="h3">Search an Artist</Typography>
-        <TextField className="w-3/5 rounded-xl" type="text" label="Search" />
+        <form
+          action=""
+          onSubmit={handleSubmit((data) => {
+            axios.post("/api/search", data);
+          })}
+        >
+          <input
+            {...register("searchInput", { required: "required" })}
+            className="w-3/5 rounded-xl"
+            type="text"
+          />
+          <p>{errors.searchInput?.message}</p>
+          <input type="submit" />
+        </form>
         <Button onClick={() => router.push("/home")}>Click Me</Button>
       </div>
     </>
