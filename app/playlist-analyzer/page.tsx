@@ -245,8 +245,17 @@ const PlaylistAnalyzer = () => {
   };
 
   const getMostRecentlyAddedTrackDate = () => {
-    const mostRecentlyAddedTrack =
-      currentPlaylistItems[currentPlaylistItems.length - 1];
+    let mostRecentlyAddedTrack = currentPlaylistItems[0];
+    for (let i = 1; i < currentPlaylistItems.length; i++) {
+      const currentItem = currentPlaylistItems[i];
+      if (
+        new Date(currentItem.added_at) >
+        new Date(mostRecentlyAddedTrack.added_at)
+      ) {
+        mostRecentlyAddedTrack = currentItem;
+      }
+    }
+
     const addedAt = mostRecentlyAddedTrack.added_at;
 
     const addedDate = new Date(addedAt);

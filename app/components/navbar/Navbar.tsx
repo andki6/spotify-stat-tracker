@@ -30,15 +30,11 @@ const Navbar = ({ spotifyToken, setSpotifyToken, spotifyDetails }) => {
           </Link>
           <Link href="/search">Search Artist</Link>
         </div>
-        {storedAccessToken ? (
+        {storedAccessToken && (
           <div className="mr-12 ml-12">
             <Button colorScheme="red" onClick={logout}>
               Logout
             </Button>
-          </div>
-        ) : (
-          <div className="mr-24 ml-12">
-            <Button colorScheme="blue">Login</Button>
           </div>
         )}
       </div>

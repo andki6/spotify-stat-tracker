@@ -8,6 +8,10 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 
 const Tracks = () => {
   const [tabIndex, setTabIndex] = useState(0);
+  const [prevShortTermRankings, setPrevShortTermRankings] = useState({});
+  const [prevMediumTermRankings, setPrevMediumTermRankings] = useState({});
+  const [prevLongTermRankings, setPrevLongTermRankings] = useState({});
+
   const spotifyData = useSelector((state) => state.spotifyDetails);
   console.log(spotifyData);
   const {
@@ -19,6 +23,25 @@ const Tracks = () => {
   let shortTermRanking = 0;
   let mediumTermRanking = 0;
   let longTermRanking = 0;
+
+  const getTrackRankings = (trackDetails) => {
+    const rankings = {};
+    trackDetails.items.forEach((track, index) => {
+      rankings[track.id] = index + 1;
+    });
+    return rankings;
+  };
+
+  useEffect(() => {
+    setPrevShortTermRankings(getTrackRankings(topTracksDetailsShortTerm));
+    setPrevMediumTermRankings(getTrackRankings(topTracksDetailsMediumTerm));
+    setPrevLongTermRankings(getTrackRankings(toptracksDetailsLongTerm));
+  }, [
+    topTracksDetailsShortTerm,
+    topTracksDetailsMediumTerm,
+    toptracksDetailsLongTerm,
+  ]);
+
   return (
     <>
       <Navbar />
@@ -50,7 +73,18 @@ const Tracks = () => {
         </TabList>
         <TabPanels>
           <TabPanel className="flex flex-col justify-center items-center">
-            {topTracksDetailsShortTerm.items.map((track) => {
+            {topTracksDetailsShortTerm.items.map((track, index) => {
+              const currentRanking = index + 1;
+              const prevRanking =
+                prevShortTermRankings[track.id] || currentRanking;
+
+              const rankingIndicator =
+                currentRanking < prevRanking
+                  ? "🔼"
+                  : currentRanking > prevRanking
+                  ? "🔽"
+                  : "";
+
               let artistAndFeatures = "";
               for (let i = 0; i < track.artists.length; i++) {
                 let artistName = track.artists[i].name;
@@ -67,6 +101,7 @@ const Tracks = () => {
                   className="w-full flex justify-between items-center mb-4"
                 >
                   <div className="flex justify-center items-center">
+                    <Text>{rankingIndicator}</Text>
                     <Text className="mr-3 w-6 font-bold">
                       {shortTermRanking}
                     </Text>
