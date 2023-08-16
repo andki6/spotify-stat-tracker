@@ -3,9 +3,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Home from "./components/home/Home";
 import { ChakraProvider } from "@chakra-ui/react";
-import Navbar from "./components/navbar/Navbar";
 import { configureStore } from "@reduxjs/toolkit";
 import accessTokenReducer from "./state/accessTokenSlice";
 import spotifyDetailsReducer from "./state/spotifyDetailsSlice";
@@ -23,6 +21,7 @@ import {
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "@reduxjs/toolkit";
 import { PersistGate } from "redux-persist/integration/react";
+import Head from "next/head";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -62,6 +61,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+      </head>
       <body className={inter.className}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>

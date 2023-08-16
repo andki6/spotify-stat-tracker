@@ -1,20 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Input,
-  Button,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  Text,
-  Container,
-  useToast,
-} from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import axios from "axios";
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import Navbar from "./components/navbar/Navbar";
 import {
   redirectToAuthCodeFlow,
@@ -40,7 +27,8 @@ const Home = () => {
 
   const [spotifyToken, setSpotifyToken] = useState("");
 
-  const clientId = "3c00a89d0d484cbfb9bf9aba6f5d351a";
+  const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
+  // const clientId = "3c00a89d0d484cbfb9bf9aba6f5d351a";
   const redirectUri = "http://localhost:3000";
   const authEndpoint = "https://accounts.spotify.com/authorize";
   const responseType = "token";

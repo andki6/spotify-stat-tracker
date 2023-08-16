@@ -107,6 +107,7 @@ const Tracks = () => {
                     </Text>
                     <Image
                       src={track.album.images[0].url}
+                      alt={track.name}
                       boxSize="65px"
                       className="mr-3"
                     />
