@@ -1,29 +1,29 @@
-import axios from "axios";
+import axios from 'axios';
 
 export async function redirectToAuthCodeFlow(clientId: string) {
   const verifier = generateCodeVerifier(128);
   const challenge = await generateCodeChallenge(verifier);
 
-  localStorage.setItem("verifier", verifier);
+  localStorage.setItem('verifier', verifier);
 
   const params = new URLSearchParams();
-  params.append("client_id", clientId);
-  params.append("response_type", "code");
-  params.append("redirect_uri", "http://localhost:3000");
+  params.append('client_id', clientId);
+  params.append('response_type', 'code');
+  params.append('redirect_uri', 'http://localhost:3000');
   params.append(
-    "scope",
-    "user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-recently-played user-top-read"
+    'scope',
+    'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-recently-played user-top-read'
   );
-  params.append("code_challenge_method", "S256");
-  params.append("code_challenge", challenge);
+  params.append('code_challenge_method', 'S256');
+  params.append('code_challenge', challenge);
 
   document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
 
 export function generateCodeVerifier(length: number) {
-  let text = "";
+  let text = '';
   let possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
   for (let i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -33,29 +33,29 @@ export function generateCodeVerifier(length: number) {
 
 export async function generateCodeChallenge(codeVerifier: string) {
   const data = new TextEncoder().encode(codeVerifier);
-  const digest = await window.crypto.subtle.digest("SHA-256", data);
+  const digest = await window.crypto.subtle.digest('SHA-256', data);
   return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 }
 
 export async function getAccessToken(
   clientId: string,
   code: string
 ): Promise<string> {
-  const verifier = localStorage.getItem("verifier");
+  const verifier = localStorage.getItem('verifier');
 
   const params = new URLSearchParams();
-  params.append("client_id", clientId);
-  params.append("grant_type", "authorization_code");
-  params.append("code", code);
-  params.append("redirect_uri", "http://localhost:3000");
-  params.append("code_verifier", verifier!);
+  params.append('client_id', clientId);
+  params.append('grant_type', 'authorization_code');
+  params.append('code', code);
+  params.append('redirect_uri', 'http://localhost:3000');
+  params.append('code_verifier', verifier!);
 
-  const result = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  const result = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: params,
   });
 
@@ -64,8 +64,8 @@ export async function getAccessToken(
 }
 
 export async function fetchProfile(token: string): Promise<any> {
-  const result = await fetch("https://api.spotify.com/v1/me", {
-    method: "GET",
+  const result = await fetch('https://api.spotify.com/v1/me', {
+    method: 'GET',
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -75,7 +75,7 @@ export async function fetchProfile(token: string): Promise<any> {
 export async function getPlaylistDetails(access_token, playlist_id) {
   const apiUrl = `https://api.spotify.com/v1/playlists/${playlist_id}`;
   const result = await fetch(apiUrl, {
-    method: "GET",
+    method: 'GET',
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
@@ -85,7 +85,7 @@ export async function getPlaylistDetails(access_token, playlist_id) {
 
 export async function getTopArtistsShortTerm(access_token) {
   const apiUrl =
-    "https://api.spotify.com/v1/me/top/artists?time_range=short_term";
+    'https://api.spotify.com/v1/me/top/artists?time_range=short_term';
   try {
     const response = await axios.get(apiUrl, {
       headers: {
@@ -99,7 +99,7 @@ export async function getTopArtistsShortTerm(access_token) {
 }
 
 export async function getTopArtistsMediumTerm(access_token) {
-  const apiUrl = "https://api.spotify.com/v1/me/top/artists";
+  const apiUrl = 'https://api.spotify.com/v1/me/top/artists';
   try {
     const response = await axios.get(apiUrl, {
       headers: {
@@ -114,7 +114,7 @@ export async function getTopArtistsMediumTerm(access_token) {
 
 export async function getTopArtistsLongTerm(access_token) {
   const apiUrl =
-    "https://api.spotify.com/v1/me/top/artists?time_range=long_term";
+    'https://api.spotify.com/v1/me/top/artists?time_range=long_term';
   try {
     const response = await axios.get(apiUrl, {
       headers: {
@@ -129,7 +129,7 @@ export async function getTopArtistsLongTerm(access_token) {
 
 export async function getTopTracksShortTerm(access_token) {
   const apiUrl =
-    "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50";
+    'https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50';
   try {
     const response = await axios.get(apiUrl, {
       headers: {
@@ -143,7 +143,7 @@ export async function getTopTracksShortTerm(access_token) {
 }
 
 export async function getTopTracksMediumTerm(access_token) {
-  const apiUrl = "https://api.spotify.com/v1/me/top/tracks?limit=50";
+  const apiUrl = 'https://api.spotify.com/v1/me/top/tracks?limit=50';
   try {
     const response = await axios.get(apiUrl, {
       headers: {
@@ -158,7 +158,7 @@ export async function getTopTracksMediumTerm(access_token) {
 
 export async function getTopTracksLongTerm(access_token) {
   const apiUrl =
-    "https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=50";
+    'https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=50';
   try {
     const response = await axios.get(apiUrl, {
       headers: {
@@ -189,7 +189,7 @@ export async function followArtist(access_token, artistId) {
   const apiUrl = `https://api.spotify.com/v1/me/following?type=artist&ids=${artistId}`;
   try {
     const response = await axios({
-      method: "put",
+      method: 'put',
       url: apiUrl,
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -205,7 +205,7 @@ export async function unfollowArtist(access_token, artistId) {
   const apiUrl = `https://api.spotify.com/v1/me/following?type=artist&ids=${artistId}`;
   try {
     const response = await axios({
-      method: "delete",
+      method: 'delete',
       url: apiUrl,
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -218,10 +218,10 @@ export async function unfollowArtist(access_token, artistId) {
 }
 
 export async function searchArtist(access_token, artistName) {
-  const apiUrl = "https://api.spotify.com/v1/search";
+  const apiUrl = 'https://api.spotify.com/v1/search';
   const queryParams = new URLSearchParams({
     q: artistName,
-    type: "artist",
+    type: 'artist',
     limit: 3,
   });
   try {
@@ -314,9 +314,16 @@ export async function getCurrentUsersPlaylists(access_token) {
         Authorization: `Bearer ${access_token}`,
       },
     });
-    return response.data;
+
+    if (response.data && response.data.items) {
+      return response.data;
+    } else {
+      console.error('Unexpected API response format:', response.data);
+      return { items: [] };
+    }
   } catch (e) {
-    console.log(e);
+    console.error('Error fetching playlists:', e);
+    return { items: [] };
   }
 }
 

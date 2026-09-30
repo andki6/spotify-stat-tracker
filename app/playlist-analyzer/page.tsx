@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import Navbar from "../components/navbar/Navbar";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import Navbar from '../components/navbar/Navbar';
+import { useSelector } from 'react-redux';
 import {
   getCurrentUsersPlaylists,
   getPlaylistItemsByApiUrl,
   getArtistDetails,
-} from "../utils/utils";
-import { Button, Text, Image, Link, useMediaQuery } from "@chakra-ui/react";
+} from '../utils/utils';
+import { Button, Text, Image, Link, useMediaQuery } from '@chakra-ui/react';
 import {
   Table,
   Thead,
@@ -19,7 +19,7 @@ import {
   Td,
   TableCaption,
   TableContainer,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 const PlaylistAnalyzer = () => {
   const accessToken = useSelector((state) => state.accessToken);
@@ -31,7 +31,7 @@ const PlaylistAnalyzer = () => {
   const [playlistAnalyzerData, setPlaylistAnalyzerData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isLargerThan780] = useMediaQuery("(min-width: 780px)");
+  const [isLargerThan780] = useMediaQuery('(min-width: 780px)');
 
   const getCurrentPlaylistData = async (playlist) => {
     setIsLoading(true);
@@ -150,12 +150,12 @@ const PlaylistAnalyzer = () => {
     }
 
     topGenre = topGenre
-      ?.split(" ")
+      ?.split(' ')
       .map((word) => {
         word = word.substring(0, 1).toUpperCase() + word.slice(1);
         return word;
       })
-      .join(" ");
+      .join(' ');
     setPlaylistAnalyzerData((prevData) => ({
       ...prevData,
       topGenre: topGenre,
@@ -177,12 +177,12 @@ const PlaylistAnalyzer = () => {
 
     const mostAppearedGenres = sortedGenres.slice(0, 10).map((genre) => {
       genre = genre
-        .split(" ")
+        .split(' ')
         .map((word) => {
           word = word.substring(0, 1).toUpperCase() + word.slice(1);
           return word;
         })
-        .join(" ");
+        .join(' ');
       return genre;
     });
 
@@ -265,7 +265,7 @@ const PlaylistAnalyzer = () => {
     console.log(timeDifference);
     let daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     if (daysAgo === 0) {
-      daysAgo = "today";
+      daysAgo = 'today';
     }
     console.log(daysAgo);
     setPlaylistAnalyzerData((prevData) => ({
@@ -277,7 +277,7 @@ const PlaylistAnalyzer = () => {
   useEffect(() => {
     async function fetchData() {
       const currentUsersPlaylists = await getCurrentUsersPlaylists(accessToken);
-      setPlaylists(currentUsersPlaylists.items);
+      setPlaylists(currentUsersPlaylists?.items);
       console.log(currentUsersPlaylists);
     }
     fetchData();
@@ -305,10 +305,10 @@ const PlaylistAnalyzer = () => {
   return (
     <>
       <Navbar />
-      <Text className="font-bold text-center text-2xl mt-20 mb-8">
+      <Text className='font-bold text-center text-2xl mt-20 mb-8'>
         Choose one of your playlists to analyze!
       </Text>
-      <TableContainer maxHeight="500px" overflowY="auto" className="mx-8">
+      <TableContainer maxHeight='500px' overflowY='auto' className='mx-8'>
         <Table>
           <Thead>
             <Tr>
@@ -324,34 +324,34 @@ const PlaylistAnalyzer = () => {
               return (
                 <Tr
                   key={playlist.id}
-                  transition=".15s"
-                  _hover={{ cursor: "pointer", bg: "#ebedf0" }}
+                  transition='.15s'
+                  _hover={{ cursor: 'pointer', bg: '#ebedf0' }}
                   _active={{
-                    bg: "#dddfe2",
-                    transform: "scale(0.98)",
-                    borderColor: "#bec3c9",
+                    bg: '#dddfe2',
+                    transform: 'scale(0.98)',
+                    borderColor: '#bec3c9',
                   }}
                   onClick={() => getCurrentPlaylistData(playlist)}
                 >
                   <Td>
                     <Image
                       src={
-                        playlist.images.length === 0
-                          ? "/defaultMusicImage.png"
-                          : playlist.images[0].url
+                        playlist?.images?.length === 0
+                          ? '/defaultMusicImage.png'
+                          : playlist?.images[0]?.url
                       }
                       alt={playlist.name}
-                      boxSize="100px"
-                      objectFit="cover"
+                      boxSize='100px'
+                      objectFit='cover'
                     />
                   </Td>
-                  <Td className="font-bold text-2xl">{playlist.name}</Td>
-                  <Td className="font-bold">{playlist.owner.display_name}</Td>
+                  <Td className='font-bold text-2xl'>{playlist.name}</Td>
+                  <Td className='font-bold'>{playlist.owner.display_name}</Td>
                   <Td>
                     {playlist.public ? (
-                      <span className="text-green-400 font-bold">Public</span>
+                      <span className='text-green-400 font-bold'>Public</span>
                     ) : (
-                      <span className="text-red-400 font-bold">Private</span>
+                      <span className='text-red-400 font-bold'>Private</span>
                     )}
                   </Td>
                   <Td>{playlist.tracks.total}</Td>
@@ -362,36 +362,36 @@ const PlaylistAnalyzer = () => {
         </Table>
       </TableContainer>
       {Object.keys(currentPlaylist).length > 0 && (
-        <div className="flex flex-col justify-center items-center mt-20 mb-80">
-          <div className="w-4/5 bg-gray-100 pt-8 pb-16 rounded mb-16">
-            <h1 className="ml-12 mb-12 text-3xl font-bold underline">
+        <div className='flex flex-col justify-center items-center mt-20 mb-80'>
+          <div className='w-4/5 bg-gray-100 pt-8 pb-16 rounded mb-16'>
+            <h1 className='ml-12 mb-12 text-3xl font-bold underline'>
               Analysis
             </h1>
-            <div className="flex jusitfy-between items-center mx-20 w-full">
+            <div className='flex jusitfy-between items-center mx-20 w-full'>
               <Link
                 href={currentPlaylist.external_urls.spotify}
                 isExternal
-                className="w-full h-full"
+                className='w-full h-full'
               >
                 <Image
                   src={
                     currentPlaylist.images.length === 0
-                      ? "/defaultMusicImage.png"
+                      ? '/defaultMusicImage.png'
                       : currentPlaylist.images[0].url
                   }
                   alt={currentPlaylist.name}
-                  boxSize="400px"
-                  className="w-full"
-                  objectFit="cover"
+                  boxSize='400px'
+                  className='w-full'
+                  objectFit='cover'
                 />
               </Link>
-              <div className="flex flex-col justify-center items-center w-full">
+              <div className='flex flex-col justify-center items-center w-full'>
                 <Text>
-                  <span className="font-bold text-blue-300 text-2xl">
+                  <span className='font-bold text-blue-300 text-2xl'>
                     {currentPlaylist.name}
-                  </span>{" "}
-                  by{" "}
-                  <span className="font-bold">
+                  </span>{' '}
+                  by{' '}
+                  <span className='font-bold'>
                     {currentPlaylist.owner.display_name}
                   </span>
                 </Text>
@@ -399,56 +399,56 @@ const PlaylistAnalyzer = () => {
                   <Text></Text>
                 ) : (
                   <Text>
-                    <span className="font-bold">
+                    <span className='font-bold'>
                       {currentPlaylist.tracks.total}
-                    </span>{" "}
-                    tracks by{" "}
-                    <span className="font-bold">
+                    </span>{' '}
+                    tracks by{' '}
+                    <span className='font-bold'>
                       {playlistAnalyzerData.uniqueArtistsCount}
-                    </span>{" "}
+                    </span>{' '}
                     unique artists
                   </Text>
                 )}
 
                 <Text>
-                  Top Genre:{" "}
+                  Top Genre:{' '}
                   {isLoading ? (
-                    "Loading..."
+                    'Loading...'
                   ) : (
-                    <span className="font-bold">
+                    <span className='font-bold'>
                       {playlistAnalyzerData.topGenre}
                     </span>
                   )}
                 </Text>
                 <Text>
-                  Most Appeared Artist:{" "}
+                  Most Appeared Artist:{' '}
                   {isLoading ? (
-                    "Loading..."
+                    'Loading...'
                   ) : (
-                    <span className="font-bold">
+                    <span className='font-bold'>
                       {playlistAnalyzerData.mostAppearedArtist}
                     </span>
                   )}
                 </Text>
                 <Text>
-                  Popularity Scale:{" "}
+                  Popularity Scale:{' '}
                   {isLoading ? (
-                    "Loading..."
+                    'Loading...'
                   ) : (
-                    <span className="font-bold">
+                    <span className='font-bold'>
                       {playlistAnalyzerData.popularityScale}
                     </span>
                   )}
                 </Text>
                 <Text>
-                  Playlist Last Updated:{" "}
+                  Playlist Last Updated:{' '}
                   {isLoading ? (
-                    "Loading..."
+                    'Loading...'
                   ) : (
-                    <span className="font-bold">
-                      {playlistAnalyzerData.daysAgo === "today"
+                    <span className='font-bold'>
+                      {playlistAnalyzerData.daysAgo === 'today'
                         ? playlistAnalyzerData.daysAgo
-                        : playlistAnalyzerData.daysAgo + " days ago"}{" "}
+                        : playlistAnalyzerData.daysAgo + ' days ago'}{' '}
                     </span>
                   )}
                 </Text>
@@ -456,64 +456,64 @@ const PlaylistAnalyzer = () => {
             </div>
           </div>
           {isLoading ? (
-            ""
+            ''
           ) : (
-            <div className="w-4/5 flex flex-col justify-between items-center">
+            <div className='w-4/5 flex flex-col justify-between items-center'>
               <div
                 className={
                   isLargerThan780
-                    ? "w-full flex justify-between items-center mb-8"
-                    : "w-full flex flex-col justify-between items-center mb-8"
+                    ? 'w-full flex justify-between items-center mb-8'
+                    : 'w-full flex flex-col justify-between items-center mb-8'
                 }
               >
                 <div
                   className={
                     isLargerThan780
-                      ? "flex flex-col justify-center items-center"
-                      : "flex flex-col justify-center items-center mb-8"
+                      ? 'flex flex-col justify-center items-center'
+                      : 'flex flex-col justify-center items-center mb-8'
                   }
                 >
-                  <div className="flex justify-between items-center mb-8">
-                    <Text className="font-bold text-2xl text-center mr-8">
+                  <div className='flex justify-between items-center mb-8'>
+                    <Text className='font-bold text-2xl text-center mr-8'>
                       Top 10 Artists
                     </Text>
-                    <Text className="font-bold text-2xl text-center">
+                    <Text className='font-bold text-2xl text-center'>
                       Repeats
                     </Text>
                   </div>
-                  <div className="w-full">
+                  <div className='w-full'>
                     {playlistAnalyzerData.mostAppearedArtists &&
                       playlistAnalyzerData.mostAppearedArtists.map((artist) => (
                         <div
                           key={artist}
-                          className="flex justify-between items-center mb-2"
+                          className='flex justify-between items-center mb-2'
                         >
-                          <Text className="">{artist}</Text>
-                          <Text className="mr-9">
+                          <Text className=''>{artist}</Text>
+                          <Text className='mr-9'>
                             {playlistAnalyzerData.artistFrequencies[artist]}
                           </Text>
                         </div>
                       ))}
                   </div>
                 </div>
-                <div className="flex flex-col justify-center items-center">
-                  <div className="flex justify-between items-center mb-8">
-                    <Text className="font-bold text-2xl text-center mr-8">
+                <div className='flex flex-col justify-center items-center'>
+                  <div className='flex justify-between items-center mb-8'>
+                    <Text className='font-bold text-2xl text-center mr-8'>
                       Top 10 Genres
                     </Text>
-                    <Text className="font-bold text-2xl text-center">
+                    <Text className='font-bold text-2xl text-center'>
                       Repeats
                     </Text>
                   </div>
-                  <div className="w-full">
+                  <div className='w-full'>
                     {playlistAnalyzerData.mostAppearedGenres &&
                       playlistAnalyzerData.mostAppearedGenres.map((genre) => (
                         <div
                           key={genre}
-                          className="flex justify-between items-center mb-2"
+                          className='flex justify-between items-center mb-2'
                         >
-                          <Text className="">{genre}</Text>
-                          <Text className="mr-9">
+                          <Text className=''>{genre}</Text>
+                          <Text className='mr-9'>
                             {
                               playlistAnalyzerData.genreFrequencies[
                                 genre.toLowerCase()
@@ -525,28 +525,28 @@ const PlaylistAnalyzer = () => {
                   </div>
                 </div>
               </div>
-              <Text className="mb-8">
-                Average Artists Popularity:{" "}
+              <Text className='mb-8'>
+                Average Artists Popularity:{' '}
                 {playlistAnalyzerData.averageArtistsPopularity}/100
               </Text>
-              <Text className="text-2xl font-bold mb-8">
+              <Text className='text-2xl font-bold mb-8'>
                 Most popular artists in this playlist
               </Text>
-              <div className="w-full h-60 overflow-y-auto overflow-x-hidden rounded-md">
-                <div className="flex flex-col justify-start items-left space-y-2">
+              <div className='w-full h-60 overflow-y-auto overflow-x-hidden rounded-md'>
+                <div className='flex flex-col justify-start items-left space-y-2'>
                   {playlistAnalyzerData.mostPopularArtists &&
                     playlistAnalyzerData.mostPopularArtists.map((artist) => {
                       return (
-                        <div key={artist} className="flex">
+                        <div key={artist} className='flex'>
                           <Image
                             src={playlistAnalyzerData.artistImages[artist]}
                             alt={artist}
-                            boxSize="25px"
-                            objectFit="cover"
-                            className="mr-4"
+                            boxSize='25px'
+                            objectFit='cover'
+                            className='mr-4'
                           />
-                          <Text className="font-bold">
-                            ({playlistAnalyzerData.artistPopularities[artist]}%){" "}
+                          <Text className='font-bold'>
+                            ({playlistAnalyzerData.artistPopularities[artist]}%){' '}
                             {artist}
                           </Text>
                         </div>

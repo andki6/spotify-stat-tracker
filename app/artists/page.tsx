@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import Navbar from "@/app/components/navbar/Navbar";
-import { useSelector } from "react-redux";
-import { Text, Image, Link, Button } from "@chakra-ui/react";
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
-import { FaSpotify } from "react-icons/fa";
+import React, { useEffect, useState } from 'react';
+import Navbar from '@/app/components/navbar/Navbar';
+import { useSelector } from 'react-redux';
+import { Text, Image, Link, Button } from '@chakra-ui/react';
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import { FaSpotify } from 'react-icons/fa';
 import {
   followArtist,
   unfollowArtist,
   getIsUserFollowingArtist,
-} from "../utils/utils";
+} from '../utils/utils';
 
 const Artists = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -29,11 +29,31 @@ const Artists = () => {
   let longTermRanking = 0;
 
   const getFollowingData = async (artistId) => {
-    const result = await getIsUserFollowingArtist(accessToken, artistId);
-    setIsFollowingArtist((prevData) => ({
-      ...prevData,
-      [artistId]: result[0],
-    }));
+    try {
+      const result = await getIsUserFollowingArtist(accessToken, artistId);
+
+      if (result && Array.isArray(result) && result.length > 0) {
+        setIsFollowingArtist((prevData) => ({
+          ...prevData,
+          [artistId]: result[0],
+        }));
+      } else {
+        console.error(`No valid data returned for artistId: ${artistId}`);
+        setIsFollowingArtist((prevData) => ({
+          ...prevData,
+          [artistId]: false,
+        }));
+      }
+    } catch (error) {
+      console.error(
+        `Error fetching following data for artistId: ${artistId}`,
+        error
+      );
+      setIsFollowingArtist((prevData) => ({
+        ...prevData,
+        [artistId]: false,
+      }));
+    }
   };
 
   useEffect(() => {
@@ -52,23 +72,23 @@ const Artists = () => {
     <>
       <Navbar />
       <Tabs
-        className="mt-20"
+        className='mt-20'
         isFitted
-        variant="enclosed"
+        variant='enclosed'
         onChange={(index) => setTabIndex(index)}
       >
         {tabIndex === 0 && (
-          <Text className="text-center font-bold text-2xl mb-8">
+          <Text className='text-center font-bold text-2xl mb-8'>
             Top Artists (Last 4 Weeks)
           </Text>
         )}
         {tabIndex === 1 && (
-          <Text className="text-center font-bold text-2xl mb-8">
+          <Text className='text-center font-bold text-2xl mb-8'>
             Top Artists (Last 6 Months)
           </Text>
         )}
         {tabIndex === 2 && (
-          <Text className="text-center font-bold text-2xl mb-8">
+          <Text className='text-center font-bold text-2xl mb-8'>
             Top Artists (All Time)
           </Text>
         )}
@@ -77,32 +97,32 @@ const Artists = () => {
           <Tab>Last 6 Months</Tab>
           <Tab>All Time</Tab>
         </TabList>
-        <TabPanels className="flex justify-center items-center">
-          <TabPanel className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
+        <TabPanels className='flex justify-center items-center'>
+          <TabPanel className='mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12'>
             {topArtistsDetailsShortTerm.items.map((artist) => {
               const artistId = artist.id;
               shortTermRanking++;
               return (
                 <div
                   key={artist.id}
-                  className="flex flex-col justify-center items-center"
+                  className='flex flex-col justify-center items-center'
                 >
                   <Link href={artist.external_urls.spotify} isExternal>
                     <Image
                       src={artist.images[0].url}
-                      boxSize="200px"
-                      objectFit="cover"
-                      borderRadius="full"
-                      className="mb-4"
+                      boxSize='200px'
+                      objectFit='cover'
+                      borderRadius='full'
+                      className='mb-4'
                       alt={artist.name}
                     />
                   </Link>
-                  <Text className="font-bold mb-3">
+                  <Text className='font-bold mb-3'>
                     {shortTermRanking}. {artist.name}
                   </Text>
                   {isFollowingArtist[artistId] ? (
                     <Button
-                      colorScheme="red"
+                      colorScheme='red'
                       leftIcon={<FaSpotify />}
                       onClick={async () => {
                         const unfollowArtistData = await unfollowArtist(
@@ -121,7 +141,7 @@ const Artists = () => {
                     </Button>
                   ) : (
                     <Button
-                      colorScheme="whatsapp"
+                      colorScheme='whatsapp'
                       leftIcon={<FaSpotify />}
                       onClick={async () => {
                         const followArtistData = await followArtist(
@@ -143,31 +163,31 @@ const Artists = () => {
               );
             })}
           </TabPanel>
-          <TabPanel className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
+          <TabPanel className='mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12'>
             {topArtistsDetailsMediumTerm.items.map((artist) => {
               const artistId = artist.id;
               mediumTermRanking++;
               return (
                 <div
                   key={artist.id}
-                  className="flex flex-col justify-center items-center"
+                  className='flex flex-col justify-center items-center'
                 >
                   <Link href={artist.external_urls.spotify} isExternal>
                     <Image
                       src={artist.images[0].url}
-                      boxSize="200px"
-                      objectFit="cover"
-                      borderRadius="full"
-                      className="mb-4"
+                      boxSize='200px'
+                      objectFit='cover'
+                      borderRadius='full'
+                      className='mb-4'
                       alt={artist.name}
                     />
                   </Link>
-                  <Text className="font-bold mb-3">
+                  <Text className='font-bold mb-3'>
                     {mediumTermRanking}. {artist.name}
                   </Text>
                   {isFollowingArtist[artistId] ? (
                     <Button
-                      colorScheme="red"
+                      colorScheme='red'
                       leftIcon={<FaSpotify />}
                       onClick={async () => {
                         const unfollowArtistData = await unfollowArtist(
@@ -186,7 +206,7 @@ const Artists = () => {
                     </Button>
                   ) : (
                     <Button
-                      colorScheme="whatsapp"
+                      colorScheme='whatsapp'
                       leftIcon={<FaSpotify />}
                       onClick={async () => {
                         const followArtistData = await followArtist(
@@ -208,31 +228,31 @@ const Artists = () => {
               );
             })}
           </TabPanel>
-          <TabPanel className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
+          <TabPanel className='mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12'>
             {topArtistsDetailsLongTerm.items.map((artist) => {
               const artistId = artist.id;
               longTermRanking++;
               return (
                 <div
                   key={artist.id}
-                  className="flex flex-col justify-center items-center"
+                  className='flex flex-col justify-center items-center'
                 >
                   <Link href={artist.external_urls.spotify} isExternal>
                     <Image
                       src={artist.images[0].url}
-                      boxSize="200px"
-                      objectFit="cover"
-                      borderRadius="full"
-                      className="mb-4"
+                      boxSize='200px'
+                      objectFit='cover'
+                      borderRadius='full'
+                      className='mb-4'
                       alt={artist.name}
                     />
                   </Link>
-                  <Text className="font-bold mb-3">
+                  <Text className='font-bold mb-3'>
                     {longTermRanking}. {artist.name}
                   </Text>
                   {isFollowingArtist[artistId] ? (
                     <Button
-                      colorScheme="red"
+                      colorScheme='red'
                       leftIcon={<FaSpotify />}
                       onClick={async () => {
                         const unfollowArtistData = await unfollowArtist(
@@ -251,7 +271,7 @@ const Artists = () => {
                     </Button>
                   ) : (
                     <Button
-                      colorScheme="whatsapp"
+                      colorScheme='whatsapp'
                       leftIcon={<FaSpotify />}
                       onClick={async () => {
                         const followArtistData = await followArtist(

@@ -1,0 +1,57 @@
+'use client';
+
+import { ChakraProvider } from '@chakra-ui/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import accessTokenReducer from '../state/accessTokenSlice';
+import spotifyDetailsReducer from '../state/spotifyDetailsSlice';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import { combineReducers } from '@reduxjs/toolkit';
+import { PersistGate } from 'redux-persist/integration/react';
+
+const rootReducer = combineReducers({
+  accessToken: accessTokenReducer,
+  spotifyDetails: spotifyDetailsReducer,
+});
+
+const persistConfig = {
+  key: 'root',
+  storage,
+};
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
+
+export const persistor = persistStore(store);
+
+export default function ClientProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <ChakraProvider>{children}</ChakraProvider>
+      </PersistGate>
+    </Provider>
+  );
+}
